@@ -28,14 +28,35 @@ def print_err():
 def print_menu():
     print("\n1) Pulse Scan \n2) Manage Database \n3) Exit\n")
 
+def load_db(db_path):
+    return_dict = {}
+    counter = 0
+    with open(db_path, 'r') as f:
+        f.readline()
+        for line in f:
+            line = line.strip().split(',')
+            return_dict[counter] = {
+                'ip': line[0],
+                'mac': line[1],
+                'vendor': line[2],
+                'user': line[3],
+                'description': line[4]
+            }
+            counter+= 1            
+    return return_dict
+
 if __name__ == '__main__':
-    # Check if DB exists else create DB    
-    if path.exists('db.csv'):
-        print("Loaded db.csv")
+    db_path = 'db.csv'
+    db_dict = {}
+
+    # Check if DB exists else create DB
+    if path.exists(db_path):
+        db_dict = load_db(db_path)
+        print(db_dict.__str__())
     else:
-        with open('db.csv', 'w+') as f:
-            f.write('ip, mac, vendor, user, description')
-        print("No db file found, created db.csv")
+        with open(db_path, 'w+') as f:
+            f.write('ip, mac, vendor, user, description, verified')
+        print("No db file found, created {}".format(db_path))
 
     # Program Loop
     while 1:
