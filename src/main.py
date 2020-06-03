@@ -19,7 +19,6 @@ def pulse_scan(db_path):
             mac = nm[ip]['addresses']['mac']
             vendor = nm[ip]['vendor'][mac]
             scan_results[ip] = {'mac': mac, 'vendor': vendor, 'user': 'N/A', 'description': 'N/A'}
-    print("Scan Results: \n")
     for ip in scan_results:
         if not dict_has_mac(current_db, scan_results[ip]['mac']):
             write_db(db_path, ip, scan_results[ip])
