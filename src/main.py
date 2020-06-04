@@ -10,14 +10,17 @@ def pulse_scan(db_path):
 
     host = input("Enter IP: ") or "192.168.2.114" # defaults for testing
     subnet = input("Enter Subnet: ") or "24"
-
+    
     nm.scan(hosts='{}/{}'.format(host, subnet), arguments='-sP')
     hosts = nm.all_hosts()
     for ip in hosts:
         # Nmap scan does not grab information about the host itself but still appears on the list
         if ip != host:
             mac = nm[ip]['addresses']['mac']
-            vendor = nm[ip]['vendor'][mac]
+            try:
+                vendor = nm[ip]['vendor'][mac]
+            except KeyError as k:
+                print("key error found: {}".format(k))            
             scan_results[ip] = {'mac': mac, 'vendor': vendor, 'user': 'N/A', 'description': 'N/A'}
     for ip in scan_results:
         if not dict_has_mac(current_db, scan_results[ip]['mac']):
