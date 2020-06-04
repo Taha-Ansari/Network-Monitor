@@ -1,6 +1,8 @@
 # Network-Monitor
 Private Network Monitor Application
 
+By Ebrahim Merchant and Taha Ansari
+
 Scans your private network to supply ipv4, mac address, and vendor information for active devices on the network.
 
 ## Instructions (Currently for Windows)
