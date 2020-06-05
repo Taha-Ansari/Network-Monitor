@@ -1,12 +1,11 @@
 # Network-Monitor
 Private Network Monitor Application
 
-By Ebrahim Merchant and Taha Ansari
-
 Scans your private network to supply ipv4, mac address, and vendor information for active devices on the network.
 
 ## Instructions (Currently for Windows)
 
+0. Checkout python-version branch
 1. Install Nmap by downloading: https://nmap.org/dist/nmap-7.80-setup.exe
 2. Make sure to include the path to nmap in env variables (Ex. I had to add 'C:\Program Files (x86)\Nmap' to my system variables)
 3. Make a virtual env outside src: ``` python -m venv venv ```
