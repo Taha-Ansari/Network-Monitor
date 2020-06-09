@@ -92,5 +92,8 @@
   },
   "engines": {
     "node": ">=10.13.0"
+  },
+  "dependencies": {
+    "node-nmap": "4.0.0"
   }
 }
