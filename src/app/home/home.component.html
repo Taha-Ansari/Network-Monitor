@@ -1,7 +1,31 @@
-<div class="container">
-  <h1 class="title">
-    {{ 'PAGES.HOME.TITLE' | translate }}
-  </h1>
+<div style="display: flex;" *ngIf="(nodes | async) as nodeList">
+    <h1 class="title">Topography</h1>
+    <div class="topography-container">
+      <div *ngIf="nodeList ;then nodesView else loadingText"></div>
+      <ng-template #nodesView>
+        <div *ngFor="let item of nodeList"
+        [style.top.px]="item.x"
+        [style.left.px]="item.y"
+        [style.position]="'absolute'"
+        style="display: flex;align-items: center;"
+        class="contain"
+        >
+          <div
+          (mouseover)="item.showText=true"
+          (mouseout)="item.showText=false"
+          class="ci"
+          style="border-radius: 25px; background: grey; width: 50px; height: 50px;">
+        </div>
+        <div>
+          <h5 *ngIf="item.showText">{{ item && item.vendor ? item.vendor : 'unknown'}}</h5>
+          <h6 *ngIf="item.showText">{{ item.ip }}</h6>
+        </div>
+      </div>
+      </ng-template>
+      <ng-template #loadingText>
+        <h1 class="title">Loading...</h1>
+      </ng-template>
+    </div>
 
-  <a routerLink="/detail">{{ 'PAGES.HOME.GO_TO_DETAIL' | translate }}</a>
+    <router-outlet></router-outlet>
 </div>

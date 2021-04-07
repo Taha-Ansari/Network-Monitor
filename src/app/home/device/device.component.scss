@@ -1,0 +1,27 @@
+:host {
+  margin-left: auto;
+  width: 35rem;
+  .container{
+    background: #396392;
+    padding: 1rem;
+    height: 100vh;
+
+    .header-container{
+      width: 100%;
+      display: flex;
+      .header {
+        text-align: left;
+        color: white;
+        font-weight: regular;
+        font-size: 3.25rem;
+        font-weight: normal;
+      }
+    }
+
+    .overview-container{
+      overflow: scroll;
+      width: 100%;
+    }
+
+  }
+}

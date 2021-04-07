@@ -1,5 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Subscription, interval } from 'rxjs';
+import { timer, from , Observable, of, empty } from 'rxjs';
+import { switchMap, map, catchError } from 'rxjs/operators';
+import * as fs from 'fs';
 
 const nmap = require('node-nmap');
 nmap.nmapLocation = 'nmap';
@@ -9,60 +11,52 @@ nmap.nmapLocation = 'nmap';
 })
 export class NetworkService implements OnDestroy{
 
-  subject = new BehaviorSubject(null);
-  IntervalSubscription: Subscription;
   currentScan: any;
-  constructor(private host: string, private subnet: string, private timer: number){
-  }
-  
-  async pulse_scan(){        
-      let scan = new nmap.NmapScan(this.host + "/" + this.subnet, '-sP');
-      scan.start();
-      let complete = await scan.on('complete');
-      let error = await scan.on('error');
+  constructor(
+    private host: string,
+    private subnet: string,
+    private timer: number
+  ) {}
 
-      if(complete){
-        complete = this.currentScan;
-        return complete;
-      }
+  async pulse_scan(): Promise<Array<any>> {
 
-      if (error){
-        console.log(error);
-      }
-  }
-  
-  async init_data(){
-    this.currentScan = await this.pulse_scan();
-    this.update_json();    
+      let scan = new nmap.NmapScan(this.host + "/" + this.subnet, '-sP --max-parallelism 100');
+
+      const scanValues: any = await new Promise((resolve, reject) => {
+        scan.on('complete', resolve);
+        scan.on('error', reject);
+        scan.startScan();
+      });
+
+      return scanValues;
   }
 
-  update_json(){
-    this.IntervalSubscription =  interval(this.timer).subscribe( async () => {
-      const newScan = await this.pulse_scan();
-      const isDiff = !(JSON.stringify(newScan) === JSON.stringify(this.currentScan))
+  saveDeviceData(macAddress: string, data: string) {
+    // if(fs.existsSync('db.json')) {
+    //   fs.rea
+    // }
+
+  }
+
+  get_json(): Observable<any[]> {
+
+    return timer(0, this.timer).pipe(
+      switchMap(() => from(this.pulse_scan())),
+      map((scan) => {
+
+      const newScan = scan;
+
+      const isDiff = !(JSON.stringify(newScan) === JSON.stringify(this.currentScan));
+
       if(isDiff) {
-        this.currentScan = newScan;
-        this.subject.next(this.currentScan);
-      } 
-    });
+        this.currentScan = newScan as Array<any>;
+        return newScan;
+      }
+      return this.currentScan;
+    }),
+    catchError(error => {console.log(error); return empty()})
+    );
   }
 
-  set set_host(ip:string){
-      this.host = ip;
-  }
-  
-  set set_subnet(subnet:string){
-      this.subnet = subnet;
-  }
-  
-  get get_device_data(){
-      return JSON;
-  }
-
-  ngOnDestroy():void {
-    if(!this.IntervalSubscription.closed) {
-      this.IntervalSubscription.unsubscribe();
-    }
-
-  }
+  ngOnDestroy(): void { }
 }

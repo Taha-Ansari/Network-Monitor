@@ -1,0 +1,15 @@
+<div class="card">
+  <div style="display: flex; width: 100%;">
+    <p>Vendor: </p>
+    <p class="text">{{ vendor ? vendor : 'Unknown' }}</p>
+  </div>
+  <div style="display: flex; width: 100%;">
+    <p>IP: </p>
+    <p class="text">{{ ip }}</p>
+  </div>
+  <div style="display: flex; width: 100%;">
+    <p>MAC Address: </p>
+    <p class="text">{{ mac }}</p>
+  </div>
+  <a routerLink="device/{{mac}}">MORE INFO</a>
+</div>
